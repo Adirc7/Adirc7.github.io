@@ -220,6 +220,14 @@
   .portrait{perspective:900px}
   .portrait img{transition:filter .6s ease,transform .25s ease-out,box-shadow .4s;will-change:transform}
   .portrait:hover img{filter:grayscale(0) contrast(1);box-shadow:0 24px 50px rgba(0,0,0,.18)}
+  .live-note{font:400 .74rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--grey);display:inline-flex;align-items:center}
+  .gh-intro{color:var(--muted);margin:-28px 0 40px;max-width:60ch}
+  .gh-status{color:var(--grey);font:400 .8rem var(--mono);letter-spacing:.1em;margin-top:10px}
+  .gh-status:empty{display:none}
+  .card .meta-row{display:flex;gap:18px;flex-wrap:wrap;font:400 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:12px 0 22px}
+  .card .links{display:flex;gap:14px;align-items:center}
+  .card .demo{font:500 .7rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--grey);border-bottom:1px solid var(--line)}
+  .card .demo:hover{color:var(--ink);border-color:var(--ink)}
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
   .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}*{transition:none!important}}
@@ -243,6 +251,7 @@
       <a href="#education">EDUCATION</a>
       <a href="#skills">SKILLS</a>
       <a href="#projects">PROJECTS</a>
+      <a href="#github">GITHUB</a>
       <a href="#achievements">ACHIEVEMENTS</a>
       <a href="#contact">CONTACT</a>
     </div>
@@ -479,6 +488,18 @@
   </div>
 </section>
 
+<section id="github">
+  <div class="wrap">
+    <div class="title"><h2 style="font:inherit">FROM GITHUB</h2>
+      <span class="live-note"><i class="live"></i>Live · updates automatically</span>
+    </div>
+    <p class="gh-intro">Every public repository on my GitHub appears here automatically — new work shows up the moment it's pushed.</p>
+    <div class="grid" id="gh-grid"></div>
+    <p class="gh-status" id="gh-status">Loading repositories…</p>
+    <div style="margin-top:40px"><a class="fcta" href="https://github.com/Adirc7?tab=repositories" target="_blank" rel="noopener">View all on GitHub <span>→</span></a></div>
+  </div>
+</section>
+
 <section id="achievements">
   <div class="wrap">
     <h2 class="title">ACHIEVEMENTS</h2>
@@ -637,6 +658,39 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   w.addEventListener('mousemove',e=>{const r=img.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
     img.style.transform=`rotateY(${x*10}deg) rotateX(${-y*10}deg) scale(1.02)`});
   w.addEventListener('mouseleave',()=>{img.style.transform=''});
+})();
+
+/* ---- auto-sync public GitHub repos ---- */
+(function(){
+  const USER='Adirc7', grid=document.getElementById('gh-grid'), status=document.getElementById('gh-status');
+  if(!grid)return;
+  // repos already shown as hand-written project cards are skipped here
+  const featured=new Set([...document.querySelectorAll('#projects a.gh')].map(a=>a.href.toLowerCase().replace(/\/$/,'')));
+  const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const nice=n=>n.replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const month=d=>new Date(d).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  const ghIcon='<svg><use href="#i-gh"/></svg>';
+  function render(repos){
+    const list=repos.filter(r=>!r.fork && r.name.toLowerCase()!==(USER+'.github.io').toLowerCase()
+      && !(r.topics||[]).includes('hide-portfolio')
+      && !featured.has(r.html_url.toLowerCase()));
+    grid.innerHTML=list.map(r=>{
+      const tags=[r.language,...(r.topics||[])].filter(Boolean).slice(0,7).map(t=>'<span class="tag">'+esc(t)+'</span>').join('');
+      const demo=r.homepage?'<a class="demo" href="'+esc(r.homepage)+'" target="_blank" rel="noopener">Live demo ↗</a>':'';
+      return '<article class="card in"><div class="top"><h3>'+esc(nice(r.name))+'</h3><div class="links">'+demo+
+        '<a class="gh" href="'+esc(r.html_url)+'" target="_blank" rel="noopener" aria-label="GitHub repository">'+ghIcon+'</a></div></div>'+
+        '<div class="meta-row"><span>Created '+month(r.created_at)+'</span><span>Updated '+month(r.pushed_at||r.updated_at)+'</span>'+(r.stargazers_count?'<span>★ '+r.stargazers_count+'</span>':'')+'</div>'+
+        '<p>'+esc(r.description||'Project repository on GitHub.')+'</p>'+(tags?'<div class="tags">'+tags+'</div>':'')+'</article>';
+    }).join('');
+    status.textContent=list.length?'':'No additional public repositories yet.';
+  }
+  // short cache so repeat visits are instant and stay within GitHub's rate limit
+  let cached=null;try{cached=JSON.parse(sessionStorage.getItem('gh-repos')||'null')}catch(e){}
+  if(cached&&Date.now()-cached.t<10*60*1000){render(cached.d);return}
+  fetch('https://api.github.com/users/'+USER+'/repos?per_page=100&sort=pushed',{headers:{'Accept':'application/vnd.github+json'}})
+    .then(r=>{if(!r.ok)throw r.status;return r.json()})
+    .then(d=>{try{sessionStorage.setItem('gh-repos',JSON.stringify({t:Date.now(),d}))}catch(e){}render(d)})
+    .catch(()=>{status.innerHTML='Couldn\'t load repositories right now — <a href="https://github.com/'+USER+'?tab=repositories" style="text-decoration:underline">see them on GitHub</a>.'});
 })();
 document.getElementById('yr').textContent=new Date().getFullYear();
 </script>
