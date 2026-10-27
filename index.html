@@ -133,8 +133,14 @@
   .filters button.on{border-color:var(--ink)}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
   @media (max-width:900px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--paper);border:1px solid var(--line);border-top:4px solid transparent;padding:46px 48px;box-shadow:0 2px 6px rgba(0,0,0,.04);transition:.25s;display:flex;flex-direction:column}
-  .card:hover{border-color:var(--ink);border-top-color:var(--ink);box-shadow:0 14px 30px rgba(0,0,0,.08)}
+  .card{position:relative;background:var(--paper);border:1px solid var(--line);padding:46px 48px;box-shadow:0 2px 6px rgba(0,0,0,.04);transition:box-shadow .4s,transform .4s;display:flex;flex-direction:column}
+  .card:hover{box-shadow:0 14px 30px rgba(0,0,0,.08);transform:translateY(-2px)}
+  /* border draws itself around the card, starting from the top-left corner */
+  .card::before,.card::after{content:"";position:absolute;width:0;height:0;border:2px solid transparent;box-sizing:border-box;pointer-events:none;transition:width .25s ease-in,height .25s ease-in,border-color 0s .25s}
+  .card::before{top:-1px;left:-1px}
+  .card::after{bottom:-1px;right:-1px}
+  .card:hover::before{width:calc(100% + 2px);height:calc(100% + 2px);border-top-color:var(--ink);border-right-color:var(--ink);transition:width .3s ease-out,height .3s ease-out .3s}
+  .card:hover::after{width:calc(100% + 2px);height:calc(100% + 2px);border-bottom-color:var(--ink);border-left-color:var(--ink);transition:border-color 0s .6s,width .3s ease-out .6s,height .3s ease-out .9s}
   .card .top{display:flex;justify-content:space-between;gap:12px}
   .card h3{font:500 1.6rem/1.25 var(--mono);letter-spacing:-.01em}
   .card .date{display:block;margin:12px 0 22px}
