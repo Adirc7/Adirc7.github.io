@@ -203,6 +203,9 @@
   .tag:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
   @media (prefers-reduced-motion:reduce){.lead .w{opacity:1;transform:none}}
   @media (max-width:900px){.menu a::after{display:none}}
+  .portrait img{animation:photoIn 1.2s cubic-bezier(.2,.8,.2,1) both .15s}
+  @keyframes photoIn{from{clip-path:inset(100% 0 0 0 round 24px);transform:scale(1.04)}to{clip-path:inset(0 0 0 0 round 24px);transform:none}}
+  @media (prefers-reduced-motion:reduce){.portrait img{animation:none}}
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
   .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}*{transition:none!important}}
@@ -581,6 +584,18 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   const heads=[...document.querySelectorAll('h2.title, .title>h2')];
   const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){scramble(e.target);so.unobserve(e.target)}}),{threshold:.6});
   heads.forEach(h=>{so.observe(h);h.addEventListener('mouseenter',()=>scramble(h))});
+  // hero name: same decode effect, letter by letter, on load and on hover
+  const name=document.querySelector('.name');
+  function scrambleName(){
+    if(name._run)return;name._run=true;
+    const L=[...name.querySelectorAll('.ch')];L.forEach(c=>c.dataset.t=c.dataset.t||c.textContent);
+    let f=0;const total=L.length*3+10;
+    (function tick(){
+      L.forEach((c,i)=>{c.textContent=f>i*3+10?c.dataset.t:chars[Math.random()*chars.length|0]});
+      if(++f<=total)requestAnimationFrame(tick);else{L.forEach(c=>c.textContent=c.dataset.t);name._run=false}
+    })();
+  }
+  if(name){setTimeout(scrambleName,200);name.addEventListener('mouseenter',scrambleName)}
 })();
 document.getElementById('yr').textContent=new Date().getFullYear();
 </script>
