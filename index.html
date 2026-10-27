@@ -206,6 +206,17 @@
   .portrait img{animation:photoIn 1.2s cubic-bezier(.2,.8,.2,1) both .15s}
   @keyframes photoIn{from{clip-path:inset(100% 0 0 0 round 24px);transform:scale(1.04)}to{clip-path:inset(0 0 0 0 round 24px);transform:none}}
   @media (prefers-reduced-motion:reduce){.portrait img{animation:none}}
+  .fbrand{max-width:460px}
+  .ftag{color:var(--muted);margin-top:20px;font-size:.95rem}
+  .fsoc{margin:22px 0 0;gap:22px}
+  .fmeta{display:flex;flex-direction:column;gap:6px;margin-top:24px;font:400 .76rem var(--mono);letter-spacing:.08em;color:var(--grey)}
+  .fmeta b{color:var(--ink);font-weight:500}
+  .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:10px;box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:ping 2s infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  .fcta{display:inline-flex;align-items:center;gap:10px;margin-top:28px;font:500 .82rem var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:14px 22px;border:1px solid var(--ink);transition:.25s}
+  .fcta span{transition:transform .25s}
+  .fcta:hover{background:var(--ink);color:var(--bg)}
+  .fcta:hover span{transform:translateX(5px)}
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
   .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}*{transition:none!important}}
@@ -513,7 +524,21 @@
 
 <footer>
   <div class="wrap">
-    <div><div class="big">ADITHYA BANDARA</div><p class="label" style="margin-top:12px;color:var(--ink)">Aspiring AI/ML Engineer</p></div>
+    <div class="fbrand">
+      <div class="big">ADITHYA BANDARA</div>
+      <p class="label" style="margin-top:12px;color:var(--ink)">Aspiring AI/ML Engineer</p>
+      <p class="ftag">Turning data, physics and code into intelligent systems — from Sri Lanka to the world.</p>
+      <div class="socials fsoc">
+        <a href="https://www.linkedin.com/in/adithya-bandara-3808192b2" target="_blank" rel="noopener" aria-label="LinkedIn"><svg><use href="#i-li"/></svg></a>
+        <a href="https://github.com/Adirc7" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-gh"/></svg></a>
+        <a href="mailto:aadithyabanda@gmail.com" aria-label="Email"><svg><use href="#i-mail"/></svg></a>
+      </div>
+      <div class="fmeta">
+        <span><i class="live"></i>Open to opportunities</span>
+        <span>Kaduwela, Sri Lanka · <b id="clock">--:--</b> local time</span>
+      </div>
+      <a class="fcta" href="mailto:aadithyabanda@gmail.com">Let's work together <span>→</span></a>
+    </div>
     <div class="cols">
       <div><span class="label">Index</span><a href="#profile">Profile</a><a href="#experience">Experience</a><a href="#education">Education</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div>
       <div><span class="label">Action</span><a href="cv.pdf" target="_blank" rel="noopener">Curriculum Vitae</a><a href="#profile">Back to top</a></div>
@@ -581,7 +606,7 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
       if(++f<=total)requestAnimationFrame(tick);else{el.textContent=final;el._run=false}
     })();
   }
-  const heads=[...document.querySelectorAll('h2.title, .title>h2')];
+  const heads=[...document.querySelectorAll('h2.title, .title>h2, footer .big')];
   const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){scramble(e.target);so.unobserve(e.target)}}),{threshold:.6});
   heads.forEach(h=>{so.observe(h);h.addEventListener('mouseenter',()=>scramble(h))});
   // hero name: same decode effect, letter by letter, on load and on hover
@@ -597,6 +622,10 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   }
   if(name){setTimeout(scrambleName,200);name.addEventListener('mouseenter',scrambleName)}
 })();
+
+/* footer local clock (Sri Lanka time) + decode on footer name */
+(function(){const el=document.getElementById('clock');if(!el)return;
+  const f=()=>{try{el.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Colombo'})}catch(e){}};f();setInterval(f,30000)})();
 document.getElementById('yr').textContent=new Date().getFullYear();
 </script>
 </body>
