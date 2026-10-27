@@ -217,6 +217,9 @@
   .fcta span{transition:transform .25s}
   .fcta:hover{background:var(--ink);color:var(--bg)}
   .fcta:hover span{transform:translateX(5px)}
+  .portrait{perspective:900px}
+  .portrait img{transition:filter .6s ease,transform .25s ease-out,box-shadow .4s;will-change:transform}
+  .portrait:hover img{filter:grayscale(0) contrast(1);box-shadow:0 24px 50px rgba(0,0,0,.18)}
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
   .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}*{transition:none!important}}
@@ -626,6 +629,15 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 /* footer local clock (Sri Lanka time) + decode on footer name */
 (function(){const el=document.getElementById('clock');if(!el)return;
   const f=()=>{try{el.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Colombo'})}catch(e){}};f();setInterval(f,30000)})();
+
+/* photo: gentle 3D tilt that follows the mouse, colour on hover */
+(function(){const w=document.querySelector('.portrait'),img=w&&w.querySelector('img');
+  if(!img||matchMedia('(prefers-reduced-motion: reduce)').matches||matchMedia('(hover: none)').matches)return;
+  img.addEventListener('animationend',()=>{img.style.animation='none'},{once:true});
+  w.addEventListener('mousemove',e=>{const r=img.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    img.style.transform=`rotateY(${x*10}deg) rotateX(${-y*10}deg) scale(1.02)`});
+  w.addEventListener('mouseleave',()=>{img.style.transform=''});
+})();
 document.getElementById('yr').textContent=new Date().getFullYear();
 </script>
 </body>
