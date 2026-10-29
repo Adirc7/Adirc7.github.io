@@ -53,9 +53,13 @@
   .lead{color:var(--muted);font-size:1.08rem;max-width:62ch}
   .motto{margin:22px 0 0;padding:4px 0 26px 18px;border-left:2px solid var(--ink);border-bottom:1px solid var(--line);max-width:62ch;opacity:0;transform:translateY(8px);animation:mottoIn .8s ease .9s forwards}
   .motto-label{display:block;font:500 .7rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
-  .motto p{font:500 1.25rem/1.45 var(--mono);letter-spacing:-.01em;color:var(--ink)}
+  .motto p{font:500 1.25rem/1.45 var(--mono);letter-spacing:-.01em;color:var(--ink);
+    background:linear-gradient(100deg,var(--ink) 0%,var(--ink) 42%,#c9c9c9 50%,var(--ink) 58%,var(--ink) 100%);
+    background-size:250% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;animation:mottoShine 4s ease-in-out 1.8s infinite}
+  @keyframes mottoShine{0%{background-position:100% 0}45%,100%{background-position:0 0}}
   @keyframes mottoIn{to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){.motto{opacity:1;transform:none;animation:none}}
+  @media (prefers-reduced-motion:reduce){.motto{opacity:1;transform:none;animation:none}.motto p{animation:none}}
   .actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:28px}
   .btn{font:600 .85rem var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:14px 26px;border:1px solid var(--ink);transition:.2s}
   .btn.solid{background:var(--ink);color:var(--bg)}
