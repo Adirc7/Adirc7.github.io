@@ -50,7 +50,12 @@
   .name>span{display:block}
   .name>span:not(.l1){color:var(--grey)}
   .meta{display:flex;flex-wrap:wrap;gap:10px 44px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:36px 0 26px;font:400 .82rem var(--mono);letter-spacing:.04em;color:var(--muted)}
-  .lead{color:var(--muted);font-size:1.08rem;max-width:62ch;padding-bottom:28px;border-bottom:1px solid var(--line)}
+  .lead{color:var(--muted);font-size:1.08rem;max-width:62ch}
+  .motto{margin:22px 0 0;padding:4px 0 26px 18px;border-left:2px solid var(--ink);border-bottom:1px solid var(--line);max-width:62ch;opacity:0;transform:translateY(8px);animation:mottoIn .8s ease .9s forwards}
+  .motto-label{display:block;font:500 .7rem var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
+  .motto p{font:500 1.25rem/1.45 var(--mono);letter-spacing:-.01em;color:var(--ink)}
+  @keyframes mottoIn{to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.motto{opacity:1;transform:none;animation:none}}
   .actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:28px}
   .btn{font:600 .85rem var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:14px 26px;border:1px solid var(--ink);transition:.2s}
   .btn.solid{background:var(--ink);color:var(--bg)}
@@ -269,7 +274,11 @@
         <span>B.Sc. (Hons) Data Science · SLIIT</span>
         <span>B.Sc. Physical Science · UoK</span>
       </div>
-      <p class="lead">Data Science and Physical Science undergraduate building machine-learning models, full-stack web apps, data warehouses and AI assistants. I bring a physics and mathematics foundation to real-world problems — from flood early-warning for Sri Lanka to voice-driven desktop assistants.</p>
+      <p class="lead">My mission is to turn data into decisions that make life better — blending the rigour of physics and mathematics with the creativity of AI. I envision a future where intelligent systems warn communities before floods strike, keep businesses one step ahead, and put powerful technology in everyone's hands.</p>
+      <blockquote class="motto">
+        <span class="motto-label">Motto</span>
+        <p>“A dreamer never gives up until the dream comes true.”</p>
+      </blockquote>
       <div class="actions">
         <a class="btn solid" href="#projects">View Projects</a>
         <!-- Add cv.pdf to the repo to enable this button -->
